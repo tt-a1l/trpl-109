@@ -1,6 +1,6 @@
 # trpl-109
 
-QUERY SQL PENGGUNAAN BARANG KEMBALI (ReUsePoli)
+<!-- QUERY SQL PENGGUNAAN BARANG KEMBALI (ReUsePoli) -->
 
 create database penggunaanbarangkembali;
 
