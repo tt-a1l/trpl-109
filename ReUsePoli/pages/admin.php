@@ -1,6 +1,6 @@
 <?php
 require '../config/koneksi.php';
-require_once __DIR__ . '/../auth/cek_login_admin.php';
+require_once __DIR__ . '/../admin/cek_login.php';
 ?>
 <!DOCTYPE html>
 <html lang="id">

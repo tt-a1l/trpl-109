@@ -1,7 +1,7 @@
 
 <?php
 require_once __DIR__ . '/../config/koneksi.php';
-require_once __DIR__ . '/../auth/cek_login_admin.php';
+require_once __DIR__ . '/../admin/cek_login.php';
 
 // ambil semua data pengguna
 $query = mysqli_query(

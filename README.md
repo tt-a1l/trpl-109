@@ -1,34 +1,49 @@
-# TRPL PBL-109
+# ReUsePoli
 
-<!-- QUERY SQL PENGGUNAAN BARANG KEMBALI (ReUsePoli) -->
+Platform pendataan dan pertukaran informasi barang bekas di lingkungan Politeknik Negeri Batam.
 
-create database penggunaanbarangkembali;
+## Teknologi
+- PHP Native
+- MySQL
+- HTML, CSS, JavaScript
+- XAMPP
 
-use penggunaanbarangkembali;
+## Instalasi
 
-create table tbl_user (
-    id_user int auto_increment primary key,
-    namalengkap varchar(200) not null,
-    email varchar(200) not null,
-    password varchar(200) not null,
-    ulangipassword varchar(200) not null,
-    nohp bigint(13) not null,
-    foto int(11) not null
-);
+### 1. Clone Repository
+```bash
+cd C:\xampp\htdocs
+git clone URL_REPOSITORY
+```
 
-create table tbl_admin (
-    id_admin int auto_increment primary key,
-    email varchar(200) not null,
-    password varchar(200) not null
-);
+### 2. Jalankan XAMPP
+Aktifkan Apache dan MySQL.
 
-create table tbl_barang (
-    id_barang int auto_increment primary key,
-    namabarang varchar(200) not null,
-    kategori varchar(200) not null,
-    kondisibarang varchar(200) not null,
-    status varchar(200) not null,
-    pemilik varchar(200) not null,
-    deskripsi text not null,
-    foto varchar(200)not null
-);
+### 3. Buat Database
+Buka http://localhost/phpmyadmin
+
+Buat database sesuai nama yang digunakan dalam konfigurasi project.
+
+### 4. Import Database
+Pilih database, buka menu Import, kemudian upload:
+
+`database/reusepoli.sql`
+
+### 5. Konfigurasi Database
+Sesuaikan konfigurasi koneksi database dengan MySQL lokal masing-masing.
+
+### 6. Jalankan Project
+Buka browser:
+
+http://localhost/ReUsePoli/
+
+## Update Project
+Untuk mengambil perubahan terbaru:
+
+```bash
+git pull origin main
+```
+
+## Catatan
+Setiap anggota menggunakan database lokal masing-masing.
+Perubahan database tidak otomatis tersinkronisasi melalui GitHub.
