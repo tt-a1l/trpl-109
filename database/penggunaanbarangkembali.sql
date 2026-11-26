@@ -32,7 +32,7 @@ create table tbl_barang (
     namabarang varchar(200) not null,
     kategori varchar(200) not null,
     kondisibarang varchar(200) not null,
-    status varchar(200) not null,
+    statusbarang varchar(200) not null,
     pemilik varchar(200) not null,
     deskripsi text not null,
     foto varchar(200)not null
