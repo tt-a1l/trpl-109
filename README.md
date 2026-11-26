@@ -13,7 +13,7 @@ Platform pendataan dan pertukaran informasi barang bekas di lingkungan Politekni
 ### 1. Clone Repository
 ```bash
 cd C:\xampp\htdocs
-git clone URL_REPOSITORY
+git clone https://github.com/tt-a1l/trpl-109.git
 ```
 
 ### 2. Jalankan XAMPP
@@ -25,9 +25,9 @@ Buka http://localhost/phpmyadmin
 Buat database sesuai nama yang digunakan dalam konfigurasi project.
 
 ### 4. Import Database
-Pilih database, buka menu Import, kemudian upload:
+buka menu Import, pilih file database kemudian import:
 
-`database/reusepoli.sql`
+`database/penggunaanbarangkembali.sql`
 
 ### 5. Konfigurasi Database
 Sesuaikan konfigurasi koneksi database dengan MySQL lokal masing-masing.
@@ -35,7 +35,7 @@ Sesuaikan konfigurasi koneksi database dengan MySQL lokal masing-masing.
 ### 6. Jalankan Project
 Buka browser:
 
-http://localhost/ReUsePoli/
+http://localhost/trpl-109/ReUsePoli/auth/login.php
 
 ## Update Project
 Untuk mengambil perubahan terbaru:

@@ -27,6 +27,10 @@ SET time_zone = "+00:00";
 -- Table structure for table `tbl_admin`
 --
 
+CREATE DATABASE penggunaanbarangkembali;
+
+USE penggunaanbarangkembali
+
 CREATE TABLE `tbl_admin` (
   `id_admin` int(11) NOT NULL,
   `email` varchar(200) NOT NULL,
