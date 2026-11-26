@@ -1,5 +1,21 @@
+
 # Object file
 *.o
 
 # Ada Library Information
 *.ali
+
+# Environment / Secret
+.env
+
+# Temporary files
+*.log
+*.tmp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
