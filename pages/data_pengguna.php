@@ -14,78 +14,52 @@ $query = mysqli_query(
 if (!$query) {
     die("Gagal mengambil data pengguna.");
 }
+
+$total = mysqli_num_rows($query);
+$current = basename($_SERVER['PHP_SELF']);
 ?>
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Pengguna - ReUsePoli Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style/style.css">
-
-    <style>
-        .tabel-pengguna {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            margin-top: 20px;
-        }
-
-        .tabel-pengguna th,
-        .tabel-pengguna td {
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-            text-align: left;
-        }
-
-        .tabel-pengguna th {
-            background: #333;
-            color: white;
-        }
-
-        .tabel-pengguna tr:hover {
-            background: #f5f5f5;
-        }
-
-        .area-tabel {
-            overflow-x: auto;
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-        }
-
-        .jumlah-pengguna {
-            margin-top: 15px;
-            color: #555;
-        }
-
-        @media (max-width: 700px) {
-            .tabel-pengguna {
-                min-width: 650px;
-            }
-        }
-    </style>
 </head>
+
 <body>
 
-    <nav class="navbar">
-        <h2>ReUsePoli - Admin</h2>
-        <div class="menu">
-            <a href="admin.php">Admin</a>
-            <a href="pengguna.php">Pengguna</a>
-            <a href="../auth/logout.php">Logout</a>
+    <nav class="navbar navbar-admin">
+        <a href="admin.php" class="navbar-brand">
+            <span class="brand-icon">Re</span>
+            ReUsePoli Admin
+        </a>
+        <button class="navbar-toggle" id="navbar-toggle" aria-label="Menu">
+            <span style="background: rgba(255,255,255,0.7);"></span>
+            <span style="background: rgba(255,255,255,0.7);"></span>
+            <span style="background: rgba(255,255,255,0.7);"></span>
+        </button>
+        <div class="navbar-menu" id="navbar-menu">
+            <a href="admin.php" class="<?= $current === 'admin.php' ? 'active' : '' ?>">Dashboard</a>
+            <a href="data_pengguna.php" class="<?= $current === 'data_pengguna.php' ? 'active' : '' ?>">Data Pengguna</a>
+            <a href="../auth/logout.php" class="nav-logout">Logout</a>
         </div>
     </nav>
 
     <main class="container">
-        <h1>Data Pengguna</h1>
-        <p class="deskripsi-beranda">
-            Daftar pengguna yang terdaftar di aplikasi ReUsePoli.
-        </p>
 
-        <p class="jumlah-pengguna">
-            Total pengguna: <strong><?= mysqli_num_rows($query) ?></strong>
-        </p>
+        <div class="page-header">
+            <h1>Data Pengguna</h1>
+            <p>Daftar pengguna yang terdaftar di aplikasi ReUsePoli.</p>
+        </div>
+
+        <div class="stats-strip">
+            <span class="stat-badge">👥 Total Pengguna: <strong><?= $total ?></strong></span>
+        </div>
 
         <div class="area-tabel">
             <table class="tabel-pengguna">
@@ -98,26 +72,41 @@ if (!$query) {
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (mysqli_num_rows($query) > 0): ?>
+                    <?php if ($total > 0): ?>
                         <?php $no = 1; ?>
                         <?php while ($pengguna = mysqli_fetch_assoc($query)): ?>
                             <tr>
                                 <td><?= $no++ ?></td>
                                 <td><?= htmlspecialchars($pengguna['namalengkap'] ?? '') ?></td>
                                 <td><?= htmlspecialchars($pengguna['email'] ?? '') ?></td>
-                                <td><?= htmlspecialchars($pengguna['nohp'] ?? '') ?></td>
-                                <td><?= htmlspecialchars($pengguna['alamat'] ?? '') ?></td>
+                                <td><?= htmlspecialchars($pengguna['nohp'] ?? '-') ?></td>
                             </tr>
                         <?php endwhile; ?>
                     <?php else: ?>
-                        <tr>
-                            <td colspan="5">Belum ada data pengguna.</td>
+                        <tr class="tabel-empty">
+                            <td colspan="4">
+                                <div style="text-align:center; padding: 20px; color: var(--clr-text-muted);">
+                                    👥 Belum ada data pengguna.
+                                </div>
+                            </td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
         </div>
+
     </main>
 
+    <script>
+        const toggle = document.getElementById('navbar-toggle');
+        const menu = document.getElementById('navbar-menu');
+        if (toggle && menu) {
+            toggle.addEventListener('click', function () {
+                menu.classList.toggle('open');
+            });
+        }
+    </script>
+
 </body>
+
 </html>

@@ -69,59 +69,109 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Registrasi - ReUsePoli</title>
-
+    <title>Daftar - ReUsePoli</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style/style.css">
 </head>
 
 <body>
+    <div class="auth-wrapper">
+        <div class="auth-card">
 
-    <div class="register-box">
+            <div class="auth-logo">
+                <div class="auth-logo-mark">Re</div>
+                <h1>Buat Akun Baru</h1>
+                <p>Bergabung dan mulai berbagi barang</p>
+            </div>
 
-        <h1>ReUsePoli</h1>
+            <?php if (isset($_GET['error'])): ?>
+                <?php if ($_GET['error'] === 'kosong'): ?>
+                    <div class="alert alert-error">⚠️ Semua kolom wajib diisi.</div>
+                <?php elseif ($_GET['error'] === 'password'): ?>
+                    <div class="alert alert-error">⚠️ Konfirmasi password tidak cocok.</div>
+                <?php elseif ($_GET['error'] === 'email'): ?>
+                    <div class="alert alert-error">⚠️ Email ini sudah terdaftar. Silakan gunakan email lain.</div>
+                <?php endif; ?>
+            <?php endif; ?>
 
-        <p class="deskripsi">
-            Buat akun baru
-        </p>
+            <form action="" method="POST" id="form-registrasi">
 
-        <form action="" method="POST">
-            <label>Nama Lengkap</label>
-            <input type="text" name="namalengkap" placeholder="Masukkan nama lengkap" required>
+                <p class="form-section-label">Informasi Pribadi</p>
 
-            <label>Email</label>
-            <input type="email" name="email" placeholder="Masukkan email" required>
-            
-            <label>Nomor Telepon Aktif</label>
-            <input type="text" name="nohp" placeholder="Contoh: 08123xxxxxx" required>
+                <div class="form-group">
+                    <label for="namalengkap">Nama Lengkap</label>
+                    <input
+                        type="text"
+                        id="namalengkap"
+                        name="namalengkap"
+                        placeholder="Masukkan nama lengkap"
+                        required>
+                </div>
 
-            <label>Password</label>
-            <input type="password" id="password" name="password" placeholder="Masukkan password" required>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Masukkan email aktif"
+                        required>
+                </div>
 
-            <label>Konfirmasi Password</label>
-            <input type="password" id="ulangipassword" name="ulangipassword" placeholder="Masukkan ulang password" required>
-            <p id="pesanPassword" style="color: red;"></p>
+                <div class="form-group">
+                    <label for="nohp">Nomor Telepon Aktif</label>
+                    <input
+                        type="text"
+                        id="nohp"
+                        name="nohp"
+                        placeholder="Contoh: 08123xxxxxx"
+                        required>
+                </div>
 
-            <p>
-                <button class="login-button" type="submit">Daftar</button>
+                <p class="form-section-label">Keamanan Akun</p>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Buat password"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="ulangipassword">Konfirmasi Password</label>
+                    <input
+                        type="password"
+                        id="ulangipassword"
+                        name="ulangipassword"
+                        placeholder="Ketik ulang password"
+                        required>
+                    <p id="pesanPassword" style="color: var(--clr-red); font-size: 13px; margin-top: 5px; min-height: 18px;"></p>
+                </div>
+
+                <button type="submit" class="auth-submit">Daftar Sekarang</button>
+
+            </form>
+
+            <p class="auth-footer">
+                Sudah punya akun?
+                <a href="login.php">Login di sini</a>
             </p>
-        </form>
-        <script src="../script/script.js"></script>
 
-        <p class="daftar">
-            Sudah punya akun?
-            <a href="login.php">Login</a>
-        </p>
-
+        </div>
     </div>
 
+    <script src="../script/script.js"></script>
 </body>
 
 </html>

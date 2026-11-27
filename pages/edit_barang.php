@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $ekstensi_valid = [
             'image/jpeg' => 'jpg',
-            'image/png' => 'png',
+            'image/png'  => 'png',
             'image/webp' => 'webp'
         ];
 
@@ -194,109 +194,160 @@ if (!$barang) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Barang - Penggunaan Barang Kembali</title>
+    <title>Edit Barang - ReUsePoli</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style/style.css">
 </head>
 
 <body>
 
     <nav class="navbar">
-        <h2>BarangKembali</h2>
-
-        <div class="menu">
+        <a href="beranda.php" class="navbar-brand">
+            <span class="brand-icon">Re</span>
+            ReUsePoli
+        </a>
+        <button class="navbar-toggle" id="navbar-toggle" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="navbar-menu" id="navbar-menu">
             <a href="beranda.php">Beranda</a>
-            <a href="barang_saya.php">Barang Saya</a>
-            <a href="riwayat.html">Riwayat</a>
+            <a href="barang_saya.php" class="active">Barang Saya</a>
             <a href="profil.php">Profil</a>
+            <a href="../auth/logout.php" class="nav-logout">Logout</a>
         </div>
     </nav>
 
     <main class="container">
-        <a href="barang_saya.php" class="kembali">
-            ← Kembali
-        </a>
+
+        <a href="barang_saya.php" class="kembali">← Kembali ke Barang Saya</a>
 
         <div class="posting-box">
             <h1>Edit Barang</h1>
-
-            <p class="deskripsi-beranda">
-                Ubah informasi barang yang telah kamu posting.
-            </p>
+            <p class="deskripsi-beranda">Ubah informasi barang yang telah kamu posting.</p>
 
             <form
                 action="edit_barang.php?id=<?= (int) $barang['id_barang'] ?>"
                 method="POST"
-                enctype="multipart/form-data">
+                enctype="multipart/form-data"
+                style="margin-top: 24px;">
 
                 <input
                     type="hidden"
                     name="id_barang"
                     value="<?= (int) $barang['id_barang'] ?>">
 
-                <label>Nama Barang</label>
-                <input
-                    type="text"
-                    name="namabarang"
-                    value="<?= htmlspecialchars($barang['namabarang']) ?>"
-                    required>
+                <div class="form-group">
+                    <label for="namabarang">Nama Barang</label>
+                    <input
+                        type="text"
+                        id="namabarang"
+                        name="namabarang"
+                        value="<?= htmlspecialchars($barang['namabarang']) ?>"
+                        required>
+                </div>
 
-                <label>Kategori</label>
-                <select name="kategori" required>
-                    <?php foreach ($kategori_valid as $pilihan): ?>
-                        <option
-                            value="<?= htmlspecialchars($pilihan) ?>"
-                            <?= $barang['kategori'] === $pilihan ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($pilihan) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="kategori">Kategori</label>
+                        <select id="kategori" name="kategori" required>
+                            <?php foreach ($kategori_valid as $pilihan): ?>
+                                <option
+                                    value="<?= htmlspecialchars($pilihan) ?>"
+                                    <?= $barang['kategori'] === $pilihan ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($pilihan) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
 
-                <label>Kondisi Barang</label>
-                <select name="kondisibarang" required>
-                    <?php foreach ($kondisi_valid as $pilihan): ?>
-                        <option
-                            value="<?= htmlspecialchars($pilihan) ?>"
-                            <?= $barang['kondisibarang'] === $pilihan ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($pilihan) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
+                    <div class="form-group">
+                        <label for="kondisibarang">Kondisi Barang</label>
+                        <select id="kondisibarang" name="kondisibarang" required>
+                            <?php foreach ($kondisi_valid as $pilihan): ?>
+                                <option
+                                    value="<?= htmlspecialchars($pilihan) ?>"
+                                    <?= $barang['kondisibarang'] === $pilihan ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($pilihan) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
 
-                <label>Deskripsi Barang</label>
-                <textarea
-                    name="deskripsi"
-                    rows="5"
-                    required><?= htmlspecialchars($barang['deskripsi']) ?></textarea>
+                <div class="form-group">
+                    <label for="deskripsi">Deskripsi Barang</label>
+                    <textarea
+                        id="deskripsi"
+                        name="deskripsi"
+                        rows="5"
+                        required><?= htmlspecialchars($barang['deskripsi']) ?></textarea>
+                </div>
 
-                <label>Foto Barang Saat Ini</label>
+                <div class="form-group">
+                    <label>Foto Barang Saat Ini</label>
+                    <?php if (!empty($barang['foto'])): ?>
+                        <img
+                            src="../assets/barang/<?= rawurlencode(basename($barang['foto'])) ?>"
+                            alt="Foto barang saat ini"
+                            class="foto-current">
+                    <?php else: ?>
+                        <div class="alert alert-warning" style="margin-top: 5px;">
+                            📷 Belum ada foto barang.
+                        </div>
+                    <?php endif; ?>
+                </div>
 
-                <?php if (!empty($barang['foto_barang'])): ?>
-                    <img
-                        src="../assets/barang/<?= rawurlencode(basename($barang['foto_barang'])) ?>"
-                        alt="Foto barang saat ini"
-                        style="width: 150px; max-width: 100%; height: auto;">
-                <?php else: ?>
-                    <p>Belum ada foto barang.</p>
-                <?php endif; ?>
+                <div class="form-group">
+                    <label for="foto_barang">Ganti Foto Barang <span style="font-weight:400; color: var(--clr-text-muted);">(opsional)</span></label>
+                    <input
+                        type="file"
+                        id="foto_barang"
+                        name="foto_barang"
+                        accept="image/jpeg,image/png,image/webp">
+                    <p class="form-hint">Format JPG, PNG, atau WEBP. Maks. 15 MB. Kosongkan jika tidak ingin mengganti.</p>
 
-                <label>Ganti Foto Barang (Opsional)</label>
-                <input
-                    type="file"
-                    name="foto_barang"
-                    accept="image/jpeg,image/png,image/webp">
+                    <div class="foto-preview-wrap">
+                        <img id="foto-preview" src="" alt="Preview foto baru" />
+                    </div>
+                </div>
 
-                <small>
-                    Format JPG, PNG, atau WEBP. Maksimal 2 MB.
-                    Kosongkan jika tidak ingin mengganti foto.
-                </small>
-
-                <button type="submit">
-                    Simpan Perubahan
-                </button>
+                <button type="submit">💾 Simpan Perubahan</button>
 
             </form>
         </div>
+
     </main>
 
+    <script>
+        // Navbar toggle
+        const toggle = document.getElementById('navbar-toggle');
+        const menu = document.getElementById('navbar-menu');
+        if (toggle && menu) {
+            toggle.addEventListener('click', function () {
+                menu.classList.toggle('open');
+            });
+        }
+
+        // Preview foto baru
+        document.getElementById('foto_barang').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('foto-preview');
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function (ev) {
+                    preview.src = ev.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.style.display = 'none';
+                preview.src = '';
+            }
+        });
+    </script>
+
 </body>
+
 </html>

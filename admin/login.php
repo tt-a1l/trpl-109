@@ -29,44 +29,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Login - ReUsePoli</title>
+    <title>Login Admin - ReUsePoli</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style/style.css">
 </head>
 
 <body>
+    <div class="auth-wrapper auth-wrapper-admin">
+        <div class="auth-card">
 
-    <div class="login-box">
+            <div class="auth-logo">
+                <div class="auth-logo-mark">Re</div>
+                <div>
+                    <span class="admin-badge">🛡 Panel Administrator</span>
+                </div>
+                <h1>ReUsePoli Admin</h1>
+                <p>Masuk menggunakan akun administrator</p>
+            </div>
 
-        <h1>ReUsePoli</h1>
+            <?php if (isset($_GET['error']) && $_GET['error'] == '1'): ?>
+                <div class="alert alert-error">
+                    ⚠️ Email atau password admin salah.
+                </div>
+            <?php endif; ?>
 
-        <p class="deskripsi">
-            Silakan login menggunakan akun admin
-        </p>
+            <form action="" method="POST">
 
-        <form action="" method="POST">
+                <div class="form-group">
+                    <label for="email">Email Admin</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Masukkan email admin"
+                        required
+                        autocomplete="username">
+                </div>
 
-            <label>Email</label>
-            <input type="email" name="email" placeholder="Masukkan email">
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Masukkan password admin"
+                        required
+                        autocomplete="current-password">
+                </div>
 
-            <label>Password</label>
-            <input type="password" name="password" placeholder="Masukkan password">
+                <button type="submit" class="auth-submit" style="background: #1E7040;">Masuk sebagai Admin</button>
 
-            <p>
-                <button class="login-button" type="submit">Login</button>
-            </p>
+            </form>
 
-        </form>
-
+        </div>
     </div>
-
 </body>
 
 </html>

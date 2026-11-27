@@ -27,6 +27,18 @@ if (!$barang) {
     header('Location: beranda.php');
     exit;
 }
+
+// Siapkan nomor WA
+$nohp_wa = '';
+if (!empty($barang['nohp'])) {
+    $nohp_clean = preg_replace('/[^0-9]/', '', $barang['nohp']);
+    if (strlen($nohp_clean) > 0 && $nohp_clean[0] === '0') {
+        $nohp_clean = '62' . substr($nohp_clean, 1);
+    }
+    $nohp_wa = $nohp_clean;
+}
+
+$current = basename($_SERVER['PHP_SELF']);
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -34,81 +46,135 @@ if (!$barang) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail Barang - ReUsePoli</title>
+    <title><?= htmlspecialchars($barang['namabarang']) ?> - ReUsePoli</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style/style.css">
 </head>
 
 <body>
 
     <nav class="navbar">
-        <h2>ReUsePoli</h2>
-        <div class="menu">
+        <a href="beranda.php" class="navbar-brand">
+            <span class="brand-icon">Re</span>
+            ReUsePoli
+        </a>
+        <button class="navbar-toggle" id="navbar-toggle" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="navbar-menu" id="navbar-menu">
             <a href="beranda.php">Beranda</a>
             <a href="barang_saya.php">Barang Saya</a>
             <a href="profil.php">Profil</a>
-            <a href="../auth/logout.php">Logout</a>
+            <a href="../auth/logout.php" class="nav-logout">Logout</a>
         </div>
     </nav>
 
     <main class="container">
 
-        <a href="beranda.php" class="kembali">← Kembali</a>
+        <a href="beranda.php" class="kembali">← Kembali ke Beranda</a>
 
-        <div class="daftar-barang">
+        <div class="detail-barang-box">
 
-            <div class="foto-barang">
+            <!-- FOTO -->
+            <div class="foto-detail">
                 <?php if (!empty($barang['foto'])): ?>
-                    <img src="../assets/barang/<?= htmlspecialchars(basename($barang['foto'])) ?>"
+                    <img
+                        src="../assets/barang/<?= htmlspecialchars(basename($barang['foto'])) ?>"
                         alt="<?= htmlspecialchars($barang['namabarang']) ?>">
                 <?php else: ?>
-                    <p>Foto barang belum tersedia.</p>
+                    <div class="foto-detail-placeholder">
+                        <span>📦</span>
+                        Foto belum tersedia
+                    </div>
                 <?php endif; ?>
             </div>
 
+            <!-- INFORMASI -->
             <div class="informasi-barang">
+
+                <span class="badge badge-kategori" style="margin-bottom: 12px;">
+                    <?= htmlspecialchars($barang['kategori']) ?>
+                </span>
 
                 <h1><?= htmlspecialchars($barang['namabarang']) ?></h1>
 
-                <p>
-                    <strong>Kategori:</strong>
-                    <?= htmlspecialchars($barang['kategori']) ?>
-                </p>
+                <div class="info-row">
+                    <span class="info-label">Kondisi</span>
+                    <span class="info-value"><?= htmlspecialchars($barang['kondisibarang']) ?></span>
+                </div>
 
-                <p>
-                    <strong>Kondisi:</strong>
-                    <?= htmlspecialchars($barang['kondisibarang']) ?>
-                </p>
+                <div class="info-row">
+                    <span class="info-label">Status</span>
+                    <span class="info-value">
+                        <?php
+                        $statusClass = match($barang['statusbarang']) {
+                            'Tersedia' => 'badge-tersedia',
+                            'Tidak Tersedia' => 'badge-tidak-tersedia',
+                            default => 'badge-proses'
+                        };
+                        ?>
+                        <span class="badge <?= $statusClass ?>">
+                            <?= htmlspecialchars($barang['statusbarang']) ?>
+                        </span>
+                    </span>
+                </div>
 
-                <p>
-                    <strong>Status:</strong>
-                    <?= htmlspecialchars($barang['statusbarang']) ?>
-                </p>
+                <div class="info-row">
+                    <span class="info-label">Pemilik</span>
+                    <span class="info-value"><?= htmlspecialchars($barang['pemilik']) ?></span>
+                </div>
 
-                <p>
-                    <strong>Pemilik:</strong>
-                    <?= htmlspecialchars($barang['pemilik']) ?>
-                </p>
+                <div class="info-row">
+                    <span class="info-label">Kontak</span>
+                    <span class="info-value">
+                        <?= !empty($barang['nohp'])
+                            ? htmlspecialchars($barang['nohp'])
+                            : '<em>Belum tersedia</em>' ?>
+                    </span>
+                </div>
 
-                <p>
-                    <strong>Kontak Pemilik:</strong>
-                    <?= !empty($barang['nohp'])
-                        ? htmlspecialchars($barang['nohp'])
-                        : 'Kontak belum tersedia' ?>
-                </p>
+                <!-- DESKRIPSI -->
+                <div class="deskripsi-box">
+                    <p class="deskripsi-box-label">📝 Deskripsi Barang</p>
+                    <p>
+                        <?= !empty($barang['deskripsi'])
+                            ? nl2br(htmlspecialchars($barang['deskripsi']))
+                            : '<em>Tidak ada deskripsi.</em>' ?>
+                    </p>
+                </div>
 
-                <h3>Deskripsi</h3>
-
-                <p>
-                    <?= !empty($barang['deskripsi'])
-                        ? nl2br(htmlspecialchars($barang['deskripsi']))
-                        : 'Tidak ada deskripsi.' ?>
-                </p>
+                <!-- TOMBOL WA -->
+                <?php if (!empty($nohp_wa)): ?>
+                    <a
+                        href="https://wa.me/<?= htmlspecialchars($nohp_wa) ?>"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="wa-btn">
+                        💬 Hubungi Pemilik via WhatsApp
+                    </a>
+                <?php elseif (!empty($barang['nohp'])): ?>
+                    <div class="alert alert-warning mt-16" style="margin-bottom:0;">
+                        📱 Kontak pemilik: <?= htmlspecialchars($barang['nohp']) ?>
+                    </div>
+                <?php endif; ?>
 
             </div>
 
         </div>
 
     </main>
+
+    <script>
+        const toggle = document.getElementById('navbar-toggle');
+        const menu = document.getElementById('navbar-menu');
+        if (toggle && menu) {
+            toggle.addEventListener('click', function () {
+                menu.classList.toggle('open');
+            });
+        }
+    </script>
 
 </body>
 

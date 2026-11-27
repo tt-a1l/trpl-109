@@ -40,8 +40,9 @@ if ($cari !== '' && $kategori !== '') {
 
 mysqli_stmt_execute($stmt);
 $query = mysqli_stmt_get_result($stmt);
-?>
 
+$current = basename($_SERVER['PHP_SELF']);
+?>
 <!DOCTYPE html>
 <html lang="id">
 
@@ -49,85 +50,103 @@ $query = mysqli_stmt_get_result($stmt);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Beranda - ReUsePoli</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style/style.css">
 </head>
 
 <body>
+
     <nav class="navbar">
-        <h2>ReUsePoli</h2>
-        <div class="menu">
-            <a href="#">Beranda</a>
-            <a href="profil.php">Profil</a>
-            <a href="../auth/logout.php">Logout</a>
+        <a href="beranda.php" class="navbar-brand">
+            <span class="brand-icon">Re</span>
+            ReUsePoli
+        </a>
+        <button class="navbar-toggle" id="navbar-toggle" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="navbar-menu" id="navbar-menu">
+            <a href="beranda.php" class="<?= $current === 'beranda.php' ? 'active' : '' ?>">Beranda</a>
+            <a href="barang_saya.php" class="<?= $current === 'barang_saya.php' ? 'active' : '' ?>">Barang Saya</a>
+            <a href="profil.php" class="<?= $current === 'profil.php' ? 'active' : '' ?>">Profil</a>
+            <a href="../auth/logout.php" class="nav-logout">Logout</a>
         </div>
     </nav>
 
     <main class="container">
-        <h1>Temukan Barang yang Kamu Butuhkan</h1>
-        <p class="deskripsi-beranda">
-            Berbagi barang layak pakai untuk civitas Polibatam.
-        </p>
 
-        <form action="beranda.php" method="GET">
-            <div class="pencarian">
-                <input type="text" name="cari" placeholder="Cari nama atau kategori barang..."
-                    value="<?= htmlspecialchars($cari) ?>">
-
-                <button type="submit">Cari</button>
-
-                <?php if ($cari !== '' || $kategori !== ''): ?>
-                    <a href="beranda.php" class="tambah-barang">Reset</a>
-                <?php endif; ?>
-            </div>
-
-            <h2>Kategori</h2>
-
-            <div class="kategori">
-                <?php
-                $daftar_kategori = [
-                    'Buku',
-                    'Alat Tulis',
-                    'Elektronik',
-                    'Furniture',
-                    'Lainnya'
-                ];
-                ?>
-
-                <?php foreach ($daftar_kategori as $item): ?>
-                    <button type="submit" name="kategori" value="<?= htmlspecialchars($item) ?>" style="<?= $kategori === $item
-                          ? 'background:#333;color:white;'
-                          : '' ?>">
-                        <?= htmlspecialchars($item) ?>
-                    </button>
-                <?php endforeach; ?>
-            </div>
-        </form>
-
-
-        <div class="judul-barang">
-
-            <?php if ($cari !== '' || $kategori !== ''): ?>
-                <p>
-                    Hasil pencarian
-                    <?php if ($cari !== ''): ?>
-                        untuk <strong><?= htmlspecialchars($cari) ?></strong>
-                    <?php endif; ?>
-
-                    <?php if ($kategori !== ''): ?>
-                        kategori <strong><?= htmlspecialchars($kategori) ?></strong>
-                    <?php endif; ?>.
-                    Ditemukan <?= mysqli_num_rows($query) ?> barang.
-                </p>
-            <?php endif; ?>
-
-            <h2>Barang Tersedia</h2>
-            <a href="posting_barang.php" class="tambah-barang">
-                + Posting Barang
-            </a>
+        <div class="page-header">
+            <h1>Temukan Barang yang Kamu Butuhkan</h1>
+            <p class="deskripsi-beranda">Berbagi barang layak pakai untuk civitas Polibatam.</p>
         </div>
 
+        <!-- PENCARIAN & FILTER -->
+        <div class="search-box">
+            <form action="beranda.php" method="GET">
 
+                <div class="pencarian">
+                    <input
+                        type="text"
+                        name="cari"
+                        placeholder="🔍  Cari nama atau kategori barang..."
+                        value="<?= htmlspecialchars($cari) ?>">
 
+                    <button type="submit">Cari</button>
+
+                    <?php if ($cari !== '' || $kategori !== ''): ?>
+                        <a href="beranda.php" class="reset-link">✕ Reset</a>
+                    <?php endif; ?>
+                </div>
+
+                <p class="kategori-heading">Filter Kategori</p>
+
+                <div class="kategori">
+                    <?php
+                    $daftar_kategori = [
+                        'Buku',
+                        'Alat Tulis',
+                        'Elektronik',
+                        'Furniture',
+                        'Lainnya'
+                    ];
+                    ?>
+
+                    <?php foreach ($daftar_kategori as $item): ?>
+                        <button
+                            type="submit"
+                            name="kategori"
+                            value="<?= htmlspecialchars($item) ?>"
+                            class="<?= $kategori === $item ? 'active-chip' : '' ?>">
+                            <?= htmlspecialchars($item) ?>
+                        </button>
+                    <?php endforeach; ?>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- HASIL PENCARIAN INFO -->
+        <?php if ($cari !== '' || $kategori !== ''): ?>
+            <div class="hasil-info">
+                Menampilkan hasil
+                <?php if ($cari !== ''): ?>
+                    untuk <strong>"<?= htmlspecialchars($cari) ?>"</strong>
+                <?php endif; ?>
+                <?php if ($kategori !== ''): ?>
+                    — kategori <strong><?= htmlspecialchars($kategori) ?></strong>
+                <?php endif; ?>
+                &nbsp;·&nbsp; <strong><?= mysqli_num_rows($query) ?></strong> barang ditemukan
+            </div>
+        <?php endif; ?>
+
+        <!-- HEADER DAFTAR BARANG -->
+        <div class="judul-barang">
+            <h2>Barang Tersedia</h2>
+            <a href="posting_barang.php" class="tambah-barang">+ Posting Barang</a>
+        </div>
+
+        <!-- GRID BARANG -->
         <div class="daftar-barang">
 
             <?php if ($query && mysqli_num_rows($query) > 0): ?>
@@ -138,28 +157,41 @@ $query = mysqli_stmt_get_result($stmt);
 
                         <div class="foto-barang">
                             <?php if (!empty($barang['foto'])): ?>
-                                <img src="../assets/barang/<?= htmlspecialchars(basename($barang['foto'])) ?>"
-                                    alt="<?= htmlspecialchars($barang['namabarang']) ?>">
+                                <img
+                                    src="../assets/barang/<?= htmlspecialchars(basename($barang['foto'])) ?>"
+                                    alt="<?= htmlspecialchars($barang['namabarang']) ?>"
+                                    loading="lazy">
                             <?php else: ?>
-                                <span>Belum ada foto</span>
+                                <div class="foto-placeholder">
+                                    <span>📦</span>
+                                    Belum ada foto
+                                </div>
                             <?php endif; ?>
                         </div>
 
-                        <h3>
-                            <?= htmlspecialchars($barang['namabarang']) ?>
-                        </h3>
+                        <div class="card-body">
+                            <span class="badge badge-kategori"><?= htmlspecialchars($barang['kategori']) ?></span>
 
-                        <p>
-                            Kondisi: <?= htmlspecialchars($barang['kondisibarang']) ?>
-                        </p>
+                            <h3><?= htmlspecialchars($barang['namabarang']) ?></h3>
 
-                        <p class="status">
-                            <?= htmlspecialchars($barang['statusbarang']) ?>
-                        </p>
+                            <p>Kondisi: <?= htmlspecialchars($barang['kondisibarang']) ?></p>
 
-                        <a href="detail_barang.php?id=<?= (int) $barang['id_barang'] ?>" class="detail">
-                            Lihat Detail
-                        </a>
+                            <?php
+                            $statusClass = match($barang['statusbarang']) {
+                                'Tersedia' => 'badge-tersedia',
+                                'Tidak Tersedia' => 'badge-tidak-tersedia',
+                                default => 'badge-proses'
+                            };
+                            ?>
+                            <span class="badge <?= $statusClass ?>" style="margin-top: 4px;">
+                                <?= $barang['statusbarang'] === 'Tersedia' ? '✅' : '❌' ?>
+                                <?= htmlspecialchars($barang['statusbarang']) ?>
+                            </span>
+
+                            <a href="detail_barang.php?id=<?= (int) $barang['id_barang'] ?>" class="detail">
+                                Lihat Detail →
+                            </a>
+                        </div>
 
                     </div>
 
@@ -167,14 +199,44 @@ $query = mysqli_stmt_get_result($stmt);
 
             <?php else: ?>
 
-                <p>Belum ada barang tersedia untuk ditampilkan.</p>
+                <div class="empty-state">
+                    <div class="empty-state-icon">🗃️</div>
+                    <h3>Belum ada barang tersedia</h3>
+                    <p>
+                        <?php if ($cari !== '' || $kategori !== ''): ?>
+                            Tidak ada barang yang sesuai dengan pencarianmu. Coba kata kunci lain.
+                        <?php else: ?>
+                            Jadilah yang pertama berbagi barang layak pakai!
+                        <?php endif; ?>
+                    </p>
+                    <a href="posting_barang.php" class="tambah-barang">+ Posting Barang</a>
+                </div>
 
             <?php endif; ?>
 
         </div>
 
-
     </main>
+
+    <script>
+        const toggle = document.getElementById('navbar-toggle');
+        const menu = document.getElementById('navbar-menu');
+        if (toggle && menu) {
+            toggle.addEventListener('click', function () {
+                menu.classList.toggle('open');
+            });
+        }
+
+        // Aktifkan chip kategori yang sedang aktif
+        document.querySelectorAll('.kategori button').forEach(btn => {
+            if (btn.classList.contains('active-chip')) {
+                btn.style.background = 'var(--clr-primary)';
+                btn.style.color = 'white';
+                btn.style.borderColor = 'var(--clr-primary)';
+            }
+        });
+    </script>
+
 </body>
 
 </html>
